@@ -21,7 +21,7 @@ namespace APIBanking
         System.Net.SecurityProtocolType getSecurityProtocol();
         Uri getProxyAddress();
         X509Certificate2 getClientCertificate();
-        Boolean needsClientCertificate();
+       
 
     }
 
@@ -180,6 +180,11 @@ namespace APIBanking
                     return new EndpointAddress(baseURL + "/app/uat/DomesticRemittanceService");
                 }
                 else
+                if (serviceName == "IMTService")
+                {
+                    return new EndpointAddress(baseURL + "/app/uat/IMTService");
+                }
+                else
                 {
                     return new EndpointAddress(baseURL + "/app/uat/ssl/" + serviceName);
                 }
@@ -226,6 +231,11 @@ namespace APIBanking
                 if (serviceName == "DomesticRemittanceByPartnerService")
                 {
                     return new EndpointAddress(baseURL + "/app/live/DomesticRemittanceService");
+                }
+                else
+                if (serviceName == "IMTService")
+                {
+                    return new EndpointAddress(baseURL + "/app/live/IMTService");
                 }
                 else
                 {
