@@ -21,7 +21,7 @@ namespace APIBanking
         System.Net.SecurityProtocolType getSecurityProtocol();
         Uri getProxyAddress();
         X509Certificate2 getClientCertificate();
-       
+        Boolean needsClientCertificate();
 
     }
 
@@ -34,18 +34,6 @@ namespace APIBanking
         protected Uri proxyAddress;
         protected String pkcs12FilePath;
         protected String pkcs12Password;
-        protected byte[] pkcs12RawData;
-
-
-        protected _Environment(String user, String password, String client_id, String client_secret, byte[] pkcs12RawData, Uri proxyAddress = null)
-        {
-            this.user = user;
-            this.password = password;
-            this.client_id = client_id;
-            this.client_secret = client_secret;
-            this.proxyAddress = proxyAddress;
-            this.pkcs12RawData = pkcs12RawData;
-        }
 
         protected _Environment(String user, String password, String client_id, String client_secret, String pkcs12FilePath = null, String pkcs12Password = null, Uri proxyAddress = null)
         {
@@ -84,7 +72,7 @@ namespace APIBanking
         }
         public Boolean needsClientCertificate()
         {
-            return (this.pkcs12FilePath != null || this.pkcs12RawData != null) ? true : false;
+            return (this.pkcs12FilePath != null ) ? true : false;
         }
 
         public System.Net.SecurityProtocolType getSecurityProtocol()
@@ -93,14 +81,7 @@ namespace APIBanking
         }
         public X509Certificate2 getClientCertificate()
         {
-            if (this.pkcs12RawData != null)
-            {
-                return new X509Certificate2(this.pkcs12RawData);
-            }
-            else
-            {
-                return new X509Certificate2(this.pkcs12FilePath, this.pkcs12Password);
-            }
+            return new X509Certificate2(this.pkcs12FilePath, this.pkcs12Password);
         }
 
         public abstract EndpointAddress getEndpointAddress(string serviceName);
@@ -112,11 +93,7 @@ namespace APIBanking
         public abstract class _YBLEnvironment : _Environment
         {
 
-            protected _YBLEnvironment(String user, String password, String client_id, String client_secret, byte[] pkcs12RawData, Uri proxyAddress = null)
-                :base(user, password, client_id, client_secret, pkcs12RawData, proxyAddress)
-            {
-            }
-
+  
             protected _YBLEnvironment(String user, String password, String client_id, String client_secret, String pkcs12FilePath = null, String pkcs12Password = null, Uri proxyAddress = null) :
                 base(user, password, client_id, client_secret, pkcs12FilePath, pkcs12Password, proxyAddress)
             {
@@ -139,10 +116,7 @@ namespace APIBanking
         }
         public class UAT : _YBLEnvironment
         {
-            public UAT(String user, String password, String client_id, String client_secret, byte[] pkcs12RawData, Uri proxyAddress = null)
-                :base(user, password, client_id, client_secret, pkcs12RawData, proxyAddress)
-            {
-            }
+            
 
             public UAT(String user, String password, String client_id, String client_secret, String pkcs12FilePath = null, String pkcs12Password = null, Uri proxyAddress = null) :
                 base(user, password, client_id, client_secret, pkcs12FilePath, pkcs12Password, proxyAddress)
@@ -192,10 +166,6 @@ namespace APIBanking
         }
         public class PRD : _YBLEnvironment
         {
-            public PRD(String user, String password, String client_id, String client_secret, byte[] pkcs12RawData, Uri proxyAddress = null)
-                :base(user, password, client_id, client_secret, pkcs12RawData, proxyAddress)
-            {
-            }
 
             public PRD(String user, String password, String client_id, String client_secret, String pkcs12FilePath = null, String pkcs12Password = null, Uri proxyAddress = null) :
                 base(user, password, client_id, client_secret, pkcs12FilePath, pkcs12Password, proxyAddress)
